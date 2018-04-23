@@ -29,7 +29,7 @@
 - Star：收藏该项目，在你的头像上有一个 “Your stars” 链接，可以看到你的收藏列表，以方便下次进来。
 - Fork：复制一份项目到自己的 Github 空间上，你可以自己开发自己的这个地址项目，然后 Pull Request 给项目原主人。 
 - 只 clone 最新的一个版本记录：
-	- 命令行方法：`git clone https://github.com/judasn/IntelliJ-IDEA-Tutorial.git --depth=1`
+	- 命令行方法：`git clone https://github.com/judasn/java8-zh-cn-tutorial.git --depth=1`
 
 
 ## 参与作者汇总(Author)
