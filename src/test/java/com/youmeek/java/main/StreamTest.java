@@ -8,17 +8,38 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StreamTest {
 
 
+	//=====================================创建流 start=====================================
+
+	/**
+	 * 从 1 开始，遍历 20 个奇数
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test1131() {
+		List<Integer> list = Stream.iterate(1, (i) -> i + 1)
+				.filter(i -> i % 2 != 0)
+				.limit(20)
+				.collect(Collectors.toList());
+		System.out.println(list);
+	}
+	//=====================================创建流 end=====================================
+
 	//=====================================Map 类型处理 start=====================================
+
 
 	/**
 	 * 找出名字中包含 e 的所有对象
@@ -241,6 +262,7 @@ public class StreamTest {
 
 	/**
 	 * 找出年龄大于 20，并且用户名为 DuskLife 的用户（单个对象）
+	 * findAny(); 查找任意元素
 	 */
 	@Test
 	public void test2112() throws ParseException {
@@ -354,7 +376,7 @@ public class StreamTest {
 
 	/**
 	 * 计算所有年龄的总值
-	 *
+	 * reduce（归纳），一般和 map 一起搭配使用
 	 * @throws ParseException
 	 */
 	@Test
@@ -368,7 +390,7 @@ public class StreamTest {
 
 		System.out.println("--------------------------------计算所有年龄的总值=" + totalAge.get());
 	}
-
+	
 	/**
 	 * 年龄最高的人
 	 *
@@ -378,7 +400,11 @@ public class StreamTest {
 	public void test4() throws ParseException {
 		List<Student> studentList = GenerateStudentUtils.list();
 
+		// 写法一
 		Optional<Student> expensive = studentList.stream().max(Comparator.comparing(Student::getAge));
+		
+		// 写法二
+		Optional<Student> expensive2 = studentList.stream().collect(Collectors.maxBy(Comparator.comparing(Student::getAge)));
 		System.out.println("--------------------------------年龄最高的人=" + expensive.get().getName() + " , 年龄=" + expensive.get().getAge());
 	}
 
@@ -390,8 +416,12 @@ public class StreamTest {
 	@Test
 	public void test5() throws ParseException {
 		List<Student> studentList = GenerateStudentUtils.list();
-
+		
+		// 写法一
 		Optional<Student> cheapest = studentList.stream().min(Comparator.comparing(Student::getAge));
+
+		// 写法二
+		Optional<Student> cheapest2 = studentList.stream().collect(Collectors.minBy(Comparator.comparing(Student::getAge)));
 		System.out.println("--------------------------------年龄最低的人=" + cheapest.get().getName() + " , 年龄=" + cheapest.get().getAge());
 	}
 
@@ -413,6 +443,126 @@ public class StreamTest {
 		String result = String.format("年龄汇总=%s, 求平均数=%s, 计算总数=%s, 最大值=%s, 最小值=%s", sum, average, totalCount, max, min);
 		System.out.println("--------------------------------最终结果：" + result);
 	}
+
+	/**
+	 * 根据用户名进行 group
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test6332() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 12, new Date()));
+
+		Map<String, List<Student>> resultMap = studentList.stream().collect(
+				Collectors.groupingBy(Student::getName)
+		);
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 根据用户名进行 group，并对同组进行计算个数
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test632() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 12, new Date()));
+
+		Map<String, Long> resultMap = studentList.stream().collect(
+				Collectors.groupingBy(
+						Student::getName, Collectors.counting()
+				)
+		);
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 根据用户名进行 group，并对同组的年龄进行求和
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test1632() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 12, new Date()));
+
+		Map<String, Integer> resultMap = studentList.stream().collect(
+				Collectors.groupingBy(Student::getName, Collectors.summingInt(Student::getAge)));
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 根据用户名进行 group，并对同组的年龄进行求平均
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test16332() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 112, new Date()));
+
+		Map<String, Double> resultMap = studentList.stream().collect(
+				Collectors.groupingBy(Student::getName, Collectors.averagingDouble(Student::getAge)));
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 根据用户名进行 group，并找出相同用户名下的不同年龄
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test163212() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 112, new Date()));
+
+		Map<Integer, Set<Integer>> resultMap = studentList.stream().collect(
+				Collectors.groupingBy(Student::getId,
+						Collectors.mapping(Student::getAge, Collectors.toSet())
+				)
+		);
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 根据年龄进行分区，根据年龄分出大于 20 和小于 20 两组
+	 * key = true 表示 大于 20 的一组
+	 * key = false 表示 小于 20 的一组
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test1632122() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+
+		Map<Boolean, List<Student>> resultMap = studentList.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 20));
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
+	/**
+	 * 统计每个分区中的相同人名的个数
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void test16321222() throws ParseException {
+		List<Student> studentList = GenerateStudentUtils.list();
+		studentList.add(new Student(1, "YouMeek", 13, new Date()));
+
+		Map<Boolean, Map<String, Long>> resultMap = studentList.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 20,
+				Collectors.groupingBy(Student::getName, Collectors.counting())));
+
+		resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
+	}
+
 	//=====================================List 类型处理  end=====================================
 
 

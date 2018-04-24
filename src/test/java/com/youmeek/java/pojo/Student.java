@@ -8,7 +8,11 @@ public class Student {
 	private String name;
 	private int age;
 	private Date createDatetime;
+	
+	public Student() {
 
+	}
+	
 	public Student(int id, String name, int age, Date createDatetime) {
 		this.id = id;
 		this.name = name;
@@ -16,20 +20,38 @@ public class Student {
 		this.createDatetime = createDatetime;
 	}
 
+
+
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public int getAge() {
 		return age;
 	}
 
+	public void setAge(int age) {
+		this.age = age;
+	}
+
 	public Date getCreateDatetime() {
 		return createDatetime;
+	}
+
+	public void setCreateDatetime(Date createDatetime) {
+		this.createDatetime = createDatetime;
 	}
 
 	@Override
@@ -41,4 +63,5 @@ public class Student {
 				", createDatetime=" + createDatetime +
 				'}';
 	}
+
 }
