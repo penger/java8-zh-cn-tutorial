@@ -6,7 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenerateStudentUtils {
 
@@ -19,7 +21,7 @@ public class GenerateStudentUtils {
 		String date5String = "2017-09-21 10:17:37";
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		Date date1 = simpleDateFormat.parse(date1String);
 		Date date2 = simpleDateFormat.parse(date2String);
 		Date date3 = simpleDateFormat.parse(date3String);
@@ -33,7 +35,18 @@ public class GenerateStudentUtils {
 		studentList.add(new Student(3, "GitNavi", 10, date3));
 		studentList.add(new Student(4, "SayShy", 22, date4));
 		studentList.add(new Student(5, "DuskLife", 36, date5));
-		
+
 		return studentList;
+	}
+
+	public static Map<String, Student> map() throws ParseException {
+		List<Student> studentList = list();
+		Map<String, Student> studentMap = new HashMap<>();
+		studentMap.put("A", studentList.get(0));
+		studentMap.put("B", studentList.get(1));
+		studentMap.put("C", studentList.get(2));
+		studentMap.put("DA", studentList.get(3));
+		studentMap.put("E", studentList.get(4));
+		return studentMap;
 	}
 }

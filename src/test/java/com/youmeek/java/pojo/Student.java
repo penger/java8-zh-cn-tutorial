@@ -31,4 +31,14 @@ public class Student {
 	public Date getCreateDatetime() {
 		return createDatetime;
 	}
+
+	@Override
+	public String toString() {
+		return "Student{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", age=" + age +
+				", createDatetime=" + createDatetime +
+				'}';
+	}
 }
