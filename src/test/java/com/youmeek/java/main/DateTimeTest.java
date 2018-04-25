@@ -163,7 +163,7 @@ public class DateTimeTest {
 	}
 
 	/**
-	 * Duration 的内部实现与 Instant 类似，也是包含两部分：seconds 表示秒，nanos 表示纳秒。两者的区别是 Instant 用于表示一个时间戳（或者说是一个时间点），而 Duration 表示一个时间段，所以 Duration 类中不包含 now() 静态方法
+	 * TemporalAdjusters 的使用
 	 */
 	@Test
 	public void test13111211112() {
