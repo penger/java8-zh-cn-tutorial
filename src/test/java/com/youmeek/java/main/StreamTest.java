@@ -7,14 +7,7 @@ import org.junit.Test;
 
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.LongSummaryStatistics;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,6 +23,12 @@ import java.util.stream.Stream;
  * 其中，转换操作都是 lazy 的，多个转换操作只会在 Terminal 操作的时候融合起来，一次循环完成
  */
 public class StreamTest {
+
+
+    @Test
+    public void testThread(){
+        new Thread(()-> System.out.println("hello")).start();
+    }
 
 
     //=====================================创建流 start=====================================
@@ -51,6 +50,10 @@ public class StreamTest {
                 .limit(20)
                 .collect(Collectors.toList());
         System.out.println(list);
+
+        Stream.iterate(2, (i) -> i * i).limit(5).forEach(i-> System.out.println(i));
+//        System.out.println(list2);
+
     }
     //=====================================创建流 end=====================================
 
@@ -76,6 +79,11 @@ public class StreamTest {
                 .filter(x -> (x.getValue().getName()).contains("e"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        //写法三
+        studentMap.entrySet().stream()
+                .filter(x->(x.getValue().getName()).contains("e")).collect(Collectors.toMap(x->x.getKey(),x->x.getValue()));
+
+        resultMap.forEach((x,y)-> System.out.println(x+" ---> "+y));
         resultMap.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
         resultMap2.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));
     }
@@ -463,6 +471,8 @@ public class StreamTest {
 
         // 写法一
         Optional<Student> cheapest = studentList.stream().min(Comparator.comparing(Student::getAge));
+        Optional<Student> max = studentList.stream().max(Comparator.comparing(student -> student.getAge()));
+        System.out.println(max.get());
 
         // 写法二
         Optional<Student> cheapest2 = studentList.stream()
